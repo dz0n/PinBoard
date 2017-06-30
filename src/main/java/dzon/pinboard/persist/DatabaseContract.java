@@ -1,4 +1,4 @@
-package dzon.pinboard.contracts;
+package dzon.pinboard.persist;
 
 public class DatabaseContract {
 	public final static String repositoryName = "Notes";

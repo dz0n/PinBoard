@@ -8,7 +8,7 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
 import dzon.pinboard.PinboardApplication;
-import dzon.pinboard.contracts.DatabaseContract;
+import dzon.pinboard.persist.DatabaseContract;
 
 @Configuration
 @EnableMongoRepositories(basePackageClasses = PinboardApplication.class)
