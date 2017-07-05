@@ -44,11 +44,26 @@ public class UserRepositoryTest {
 	}
 	
 	@Test
+	public void finUserByEmail() {
+		userRepository.save(getUser());
+		userRepository.save(getUser());
+		User user = getUser();
+		user = userRepository.save(user);
+		userRepository.save(getUser());
+		userRepository.save(getUser());
+		
+		User foundUser = userRepository.findUserByEmail(user.getEmail());
+		assertEquals(user, foundUser);
+	}
+	
+	@Test
 	public void saveTest() {
 		assertEquals(0, userRepository.count());
 		
 		User user = getUser();
+		String email = user.getEmail();
 		user = userRepository.save(user);
+		assertEquals(email, user.getEmail());
 		
 		assertEquals(1,  userRepository.count());
 		List<User> users = userRepository.findAll();
