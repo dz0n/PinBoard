@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import dzon.pinboard.domain.CreateUserForm;
 import dzon.pinboard.service.UserService;
+import dzon.pinboard.web.ControllerContract.Uri;
+import dzon.pinboard.web.ControllerContract.View;
 
 @Controller
-@RequestMapping(ControllerContract.Register.path)
+@RequestMapping(Uri.register)
 public class RegisterController {
 	@Autowired
 	private UserService userService;
@@ -24,16 +26,16 @@ public class RegisterController {
 	
 	@RequestMapping(method=GET)
 	public String showRegistrationPage() {
-		return ControllerContract.Register.view;
+		return View.register;
 	}
 	
 	@RequestMapping(method=POST)
 	public String processRegistration(@ModelAttribute("form") CreateUserForm form) {
 		if(passwordsAreEqual(form)) {
 			userService.createUser(form);
-			return "redirect:" + ControllerContract.Home.path;
+			return "redirect:" + Uri.home;
 		} else {
-			return ControllerContract.Register.view;
+			return View.register;
 		}
 	}
 

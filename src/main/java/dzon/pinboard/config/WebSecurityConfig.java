@@ -8,7 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import dzon.pinboard.web.ControllerContract;
+import dzon.pinboard.web.ControllerContract.RestUri;
+import dzon.pinboard.web.ControllerContract.Uri;
 
 @Configuration
 @EnableWebSecurity
@@ -23,13 +24,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			.authorizeRequests()
 				.antMatchers(
-					ControllerContract.Home.path, 
-					ControllerContract.Register.path, 
-					ControllerContract.Login.path
+					Uri.home, 
+					Uri.register, 
+					Uri.login,
+					RestUri.register
 				).permitAll()
 				.anyRequest().authenticated()
 			.and()
-				.httpBasic();
+				.httpBasic()
+			.and()
+				.csrf().ignoringAntMatchers(RestUri.api + "/**");
 	}
 	
 	@Override

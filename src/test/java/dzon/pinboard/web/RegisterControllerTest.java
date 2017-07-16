@@ -23,6 +23,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import dzon.pinboard.domain.CreateUserForm;
 import dzon.pinboard.domain.User;
 import dzon.pinboard.service.UserService;
+import dzon.pinboard.web.ControllerContract.Uri;
+import dzon.pinboard.web.ControllerContract.View;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -42,8 +44,8 @@ public class RegisterControllerTest {
 
 	@Test
 	public void testShowRegistrationPage() throws Exception {
-		mockMvc.perform(get(ControllerContract.Register.path))
-				.andExpect(view().name(ControllerContract.Register.view))
+		mockMvc.perform(get(Uri.register))
+				.andExpect(view().name(View.register))
 				.andExpect(model().attribute("form", new CreateUserForm()));
 	}
 
@@ -61,13 +63,13 @@ public class RegisterControllerTest {
 		CreateUserForm form = getForm();
 		form.setRepeatedPassword(form.getPassword() + "foo");
 		
-		mockPostRequest(form).andExpect(view().name(ControllerContract.Register.view));
+		mockPostRequest(form).andExpect(view().name(View.register));
 		
 		Mockito.verify(userService, Mockito.never()).createUser(form);
 	}
 	
 	private ResultActions mockPostRequest(CreateUserForm form) throws Exception {
-		return mockMvc.perform(post(ControllerContract.Register.path)
+		return mockMvc.perform(post(Uri.register)
 						.with(csrf())
 						.param("email", form.getEmail())
 						.param("password", form.getPassword())

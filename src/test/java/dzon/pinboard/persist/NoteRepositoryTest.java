@@ -1,6 +1,7 @@
 package dzon.pinboard.persist;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class NoteRepositoryTest {
 		
 		assertEquals(1,  noteRepository.count());
 		List<Note> notes = noteRepository.findAll();
-		assertEquals(note.getText(), notes.get(0).getText());
+		assertEquals(note, notes.get(0));
 	}
 
 	@Test
@@ -64,10 +65,36 @@ public class NoteRepositoryTest {
 		
 		assertEquals(text, noteRepository.findAll().get(0).getText());
 	}
+	
+	@Test
+	public void findOneByIdTest() {
+		Note note = noteRepository.save(getNote());
+		
+		Note noteFromRepo = noteRepository.findOne(note.getId());
+		assertEquals(note,  noteFromRepo);
+	}
+	
+	@Test
+	public void findAllInBoardTest() {
+		Note note1 = noteRepository.save(getNote());
+		Note note2 = noteRepository.save(getNote());
+		Note note3 = noteRepository.save(getNote());
+		
+		List<Note> notes = noteRepository.findNotesByBoardId(note1.getBoardId());
+		assertEquals(3, notes.size());
+		assertTrue("note1 not found in list of notes", notes.contains(note1));
+		assertTrue("note2 not found in list of notes", notes.contains(note2));
+		assertTrue("note3 not found in list of notes", notes.contains(note3));
+	}
 
 	private Note getNote() {
 		noteCount++;
-		return new Note("Text no. " + noteCount);
+		Note note = new Note();
+		note.setText("Text no. " + noteCount);
+		note.setBoardId("id_board");
+		note.setId("note_id_" + noteCount);
+		note.setTitle("Title no. " + noteCount);
+		return note;
 	}
 
 }
