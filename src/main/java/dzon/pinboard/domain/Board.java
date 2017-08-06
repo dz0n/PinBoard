@@ -1,9 +1,5 @@
 package dzon.pinboard.domain;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,19 +8,6 @@ public class Board {
 	@Id
 	private String id;
 	private String name;
-	private Map<String, BoardRole> users = new TreeMap<String, BoardRole>();
-	
-	public void addUserId(String id, BoardRole role) {
-		users.put(id, role);
-	}
-	
-	public void removeUserId(String id) {
-		users.remove(id);
-	}
-	
-	public Map<String, BoardRole> getUsers() {
-		return Collections.unmodifiableMap(users);
-	}
 
 	public final String getName() {
 		return name;
@@ -48,7 +31,6 @@ public class Board {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((users == null) ? 0 : users.hashCode());
 		return result;
 	}
 
@@ -71,11 +53,7 @@ public class Board {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (users == null) {
-			if (other.users != null)
-				return false;
-		} else if (!users.equals(other.users))
-			return false;
 		return true;
 	}
+	
 }

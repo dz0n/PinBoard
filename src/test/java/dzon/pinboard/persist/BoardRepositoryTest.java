@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dzon.pinboard.config.MongoTestConfig;
 import dzon.pinboard.domain.Board;
-import dzon.pinboard.domain.BoardRole;
 
 @ContextConfiguration(classes=MongoTestConfig.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -42,11 +41,27 @@ public class BoardRepositoryTest {
 		assertEquals(board, boardFromRepo);
 	}
 	
+	@Test
+	public void testDeleteById() {
+		Board board = getBoard();
+		repository.save(board);
+		assertEquals(1, repository.count());
+		
+		repository.delete(board.getId());
+		assertEquals(0, repository.count());
+	}
+	
+	@Test
+	public void testCount() {
+		Board board = getBoard();
+		assertEquals(0, repository.countById(board.getId()));
+		repository.save(board);
+		assertEquals(1, repository.countById(board.getId()));
+	}
+	
 	private Board getBoard() {
 		Board board = new Board();
 		board.setName("bla board");
-		board.addUserId("bla1", BoardRole.OWNER);
-		board.addUserId("bla2", BoardRole.USER);
 		return board;
 	}
 }

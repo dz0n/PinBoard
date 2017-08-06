@@ -21,5 +21,4 @@ public class CurrentUserDetailsService implements UserDetailsService {
 			throw new UsernameNotFoundException(String.format("User with email=%s was not found", username));
 		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getHash(), AuthorityUtils.NO_AUTHORITIES);
 	}
-
 }
