@@ -2,6 +2,7 @@ package dzon.pinboard.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,7 +31,7 @@ import dzon.pinboard.persist.BoardRepository;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class BoardServiceImplTest {
 	@Mock
-	public BoardRepository repository;
+	private BoardRepository repository;
 	@Mock
 	private BoardPermissionService boardPermissionService;
 	@Autowired @InjectMocks
@@ -72,10 +73,9 @@ public class BoardServiceImplTest {
 	
 	@Test(expected=NotFoundException.class)
 	public void testGetNull() {
-		Mockito.when(repository.findOne(any(String.class))).thenReturn(null);
+		Mockito.when(repository.findOne(anyString())).thenReturn(null);
 		
-		@SuppressWarnings("unused")
-		Board board = service.get("wrong_id");
+		service.get("wrong_id");
 	}
 
 	@Test
@@ -133,13 +133,10 @@ public class BoardServiceImplTest {
 	}
 
 	private Collection<Board> getBoardsCollection() {
-		Board board1 = getBoard();
-		Board board2 = getBoard();
-		Board board3 = getBoard();
 		Collection<Board> boards = new ArrayList<>();
-		boards.add(board1);
-		boards.add(board2);
-		boards.add(board3);
+		boards.add(getBoard());
+		boards.add(getBoard());
+		boards.add(getBoard());
 		return boards;
 	}
 

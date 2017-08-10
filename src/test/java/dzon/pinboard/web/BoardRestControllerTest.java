@@ -2,7 +2,8 @@ package dzon.pinboard.web;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.any;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -21,6 +22,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -72,7 +74,7 @@ public class BoardRestControllerTest extends RestControllerTest {
 		Board board = getInitialBoard();
 		String jsonBoard = json(board);
 		
-		this.mockMvc.perform(post(RestUri.boards)
+		mockMvc.perform(post(RestUri.boards)
 				.contentType(contentType)
 				.content(jsonBoard))
 			.andExpect(status().isCreated());
@@ -146,10 +148,34 @@ public class BoardRestControllerTest extends RestControllerTest {
 	@Test
 	@WithMockUser(username=userName)
 	public void testBoardNotFound() throws Exception {
-		when(boardService.get(any(String.class))).thenThrow(NotFoundException.class);
+		when(boardService.get(anyString())).thenThrow(NotFoundException.class);
 		
 		mockMvc.perform(get(RestUri.boards + "/wrong_id"))
 			.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	@WithMockUser(username=userName)
+	public void testSaveBoardWithId() throws Exception {
+		Board initialBoard = getInitialBoard();
+		initialBoard.setId("");
+		Board initialBoardWithId = getInitialBoard();
+		Board savedBoard = getBoard(initialBoard);
+		initialBoardWithId.setId("wrong_id");
+		
+		when(boardService.save(initialBoard, userId)).thenReturn(savedBoard);
+
+		String jsonBoard = json(initialBoardWithId);
+		
+		mockMvc.perform(post(RestUri.boards)
+				.contentType(contentType)
+				.content(jsonBoard))
+			.andExpect(status().isCreated());
+		
+		ArgumentCaptor<Board> captorBoard = ArgumentCaptor.forClass(Board.class);
+		verify(boardService).save(captorBoard.capture(), anyString());
+		Board board = captorBoard.getValue();
+		assertNull(board.getId());		
 	}
 	
 	private Board getInitialBoard() {

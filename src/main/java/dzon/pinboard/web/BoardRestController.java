@@ -35,11 +35,12 @@ public class BoardRestController {
 	public ResponseEntity<?> add(@RequestBody Board board, Principal principal) {
 		User user = userService.getUserByEmail(principal.getName());
 		
-		boardService.save(board, user.getId());
+		board.setId(null);
+		Board savedBoard = boardService.save(board, user.getId());
 		
 		URI location = ServletUriComponentsBuilder
 				.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(board.getId()).toUri();
+				.buildAndExpand(savedBoard.getId()).toUri();
 		
 		return ResponseEntity.created(location).build();
 	}

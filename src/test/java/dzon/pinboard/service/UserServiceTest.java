@@ -1,6 +1,6 @@
 package dzon.pinboard.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
@@ -9,14 +9,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dzon.pinboard.PinboardApplication;
-import dzon.pinboard.config.MongoTestConfig;
 import dzon.pinboard.config.PasswordEncoderConfig;
 import dzon.pinboard.domain.CreateUserForm;
 import dzon.pinboard.domain.User;

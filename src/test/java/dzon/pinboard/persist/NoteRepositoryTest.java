@@ -3,6 +3,7 @@ package dzon.pinboard.persist;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.After;
@@ -80,7 +81,7 @@ public class NoteRepositoryTest {
 		Note note2 = noteRepository.save(getNote());
 		Note note3 = noteRepository.save(getNote());
 		
-		List<Note> notes = noteRepository.findNotesByBoardId(note1.getBoardId());
+		Collection<Note> notes = noteRepository.findNotesByBoardId(note1.getBoardId());
 		assertEquals(3, notes.size());
 		assertTrue("note1 not found in list of notes", notes.contains(note1));
 		assertTrue("note2 not found in list of notes", notes.contains(note2));
