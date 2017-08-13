@@ -11,11 +11,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 })
 public class BoardPermission {
 	@Id
-	private final String id;
-	private final String userId;
-	private final String boardId;
-	private final BoardRole role;
-
+	private String id;
+	private String userId;
+	private String boardId;
+	private BoardRole role;
+	
+	public BoardPermission() { }
+	
 	public BoardPermission(String id, String userId, String boardId, BoardRole role) {
 		this.id = id;
 		this.userId = userId;
@@ -37,6 +39,22 @@ public class BoardPermission {
 
 	public final BoardRole getRole() {
 		return role;
+	}
+	
+	public final void setId(String id) {
+		this.id = id;
+	}
+
+	public final void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public final void setBoardId(String boardId) {
+		this.boardId = boardId;
+	}
+
+	public final void setRole(BoardRole role) {
+		this.role = role;
 	}
 
 	@Override

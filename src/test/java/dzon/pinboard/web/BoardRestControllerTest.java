@@ -84,6 +84,30 @@ public class BoardRestControllerTest extends RestControllerTest {
 	
 	@Test
 	@WithMockUser(username=userName)
+	public void testAddBoardWithId() throws Exception {
+		Board initialBoard = getInitialBoard();
+		initialBoard.setId(null);
+		Board initialBoardWithId = getInitialBoard();
+		Board savedBoard = getBoard(initialBoard);
+		initialBoardWithId.setId("wrong_id");
+		
+		when(boardService.save(initialBoard, userId)).thenReturn(savedBoard);
+	
+		String jsonBoard = json(initialBoardWithId);
+		
+		mockMvc.perform(post(RestUri.boards)
+				.contentType(contentType)
+				.content(jsonBoard))
+			.andExpect(status().isCreated());
+		
+		ArgumentCaptor<Board> captorBoard = ArgumentCaptor.forClass(Board.class);
+		verify(boardService).save(captorBoard.capture(), anyString());
+		Board board = captorBoard.getValue();
+		assertNull(board.getId());		
+	}
+
+	@Test
+	@WithMockUser(username=userName)
 	public void testUpdate() throws Exception {
 		when(boardService.save(getInitialBoard(), userId)).thenReturn(getBoard(getInitialBoard()));
 		
@@ -107,8 +131,8 @@ public class BoardRestControllerTest extends RestControllerTest {
 		mockMvc.perform(get(RestUri.boards + "/" + board.getId()))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(contentType))
-				.andExpect(jsonPath("$.id", is(board.getId())))
-				.andExpect(jsonPath("$.name", is(board.getName())));
+				.andExpect(jsonPath("$.board.id", is(board.getId())))
+				.andExpect(jsonPath("$.board.name", is(board.getName())));
 		
 		verify(boardService, times(1)).get(board.getId());
 	}
@@ -123,12 +147,12 @@ public class BoardRestControllerTest extends RestControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(contentType))
 				.andExpect(jsonPath("$", hasSize(3)))
-				.andExpect(jsonPath("$[0].id", is(boards.get(0).getId())))
-				.andExpect(jsonPath("$[0].name", is(boards.get(0).getName())))
-				.andExpect(jsonPath("$[1].id", is(boards.get(1).getId())))
-				.andExpect(jsonPath("$[1].name", is(boards.get(1).getName())))
-				.andExpect(jsonPath("$[2].id", is(boards.get(2).getId())))
-				.andExpect(jsonPath("$[2].name", is(boards.get(2).getName())));
+				.andExpect(jsonPath("$[0].board.id", is(boards.get(0).getId())))
+				.andExpect(jsonPath("$[0].board.name", is(boards.get(0).getName())))
+				.andExpect(jsonPath("$[1].board.id", is(boards.get(1).getId())))
+				.andExpect(jsonPath("$[1].board.name", is(boards.get(1).getName())))
+				.andExpect(jsonPath("$[2].board.id", is(boards.get(2).getId())))
+				.andExpect(jsonPath("$[2].board.name", is(boards.get(2).getName())));
 		
 		verify(boardService, times(1)).getBoards(userId);
 	}
@@ -154,30 +178,6 @@ public class BoardRestControllerTest extends RestControllerTest {
 			.andExpect(status().isNotFound());
 	}
 	
-	@Test
-	@WithMockUser(username=userName)
-	public void testSaveBoardWithId() throws Exception {
-		Board initialBoard = getInitialBoard();
-		initialBoard.setId("");
-		Board initialBoardWithId = getInitialBoard();
-		Board savedBoard = getBoard(initialBoard);
-		initialBoardWithId.setId("wrong_id");
-		
-		when(boardService.save(initialBoard, userId)).thenReturn(savedBoard);
-
-		String jsonBoard = json(initialBoardWithId);
-		
-		mockMvc.perform(post(RestUri.boards)
-				.contentType(contentType)
-				.content(jsonBoard))
-			.andExpect(status().isCreated());
-		
-		ArgumentCaptor<Board> captorBoard = ArgumentCaptor.forClass(Board.class);
-		verify(boardService).save(captorBoard.capture(), anyString());
-		Board board = captorBoard.getValue();
-		assertNull(board.getId());		
-	}
-	
 	private Board getInitialBoard() {
 		Board board = new Board();
 		board.setName("Board #x");
@@ -185,8 +185,10 @@ public class BoardRestControllerTest extends RestControllerTest {
 	}
 	
 	private Board getBoard(Board board) {
-		board.setId("board_id_no_x");
-		return board;
+		Board boardWithId = new Board();
+		boardWithId.setName(board.getName());
+		boardWithId.setId("board_id_no_x");
+		return boardWithId;
 	}
 	
 	private List<Board> getBoards() {

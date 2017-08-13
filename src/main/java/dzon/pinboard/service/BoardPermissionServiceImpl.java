@@ -29,8 +29,13 @@ public class BoardPermissionServiceImpl implements BoardPermissionService {
 	}
 
 	@Override
-	public void delete(BoardPermission permission) {
-		repository.delete(permission);
+	public void delete(String id) {
+		repository.delete(id);
+	}
+
+	@Override
+	public BoardPermission get(String permissionId) {
+		return repository.findOne(permissionId);
 	}
 
 }

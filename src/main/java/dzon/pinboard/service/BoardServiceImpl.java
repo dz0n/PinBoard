@@ -23,7 +23,10 @@ public class BoardServiceImpl implements BoardService {
 		Collection<BoardPermission> permissions = boardPermissionService.getBoardPermissionsByUser(userId);
 		Collection<Board> boards = new ArrayList<>();
 		for(BoardPermission permission : permissions) {
-			boards.add(boardRepository.findOne(permission.getBoardId()));
+			Board board = boardRepository.findOne(permission.getBoardId());
+			if(board!=null) {
+				boards.add(board);
+			}
 		}
 		return boards;
 	}

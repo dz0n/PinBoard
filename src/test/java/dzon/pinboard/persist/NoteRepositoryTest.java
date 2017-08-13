@@ -53,7 +53,7 @@ public class NoteRepositoryTest {
 		noteRepository.save(getNote());
 		assertEquals(3, noteRepository.count());
 		
-		noteRepository.delete(note);
+		noteRepository.delete(note.getId());
 		assertEquals(2, noteRepository.count());
 	}
 	

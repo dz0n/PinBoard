@@ -163,9 +163,10 @@ public class NoteRestControllerTest  extends RestControllerTest {
 		Note notSavedNote = getNotSavedNote();
 		Note note = getNote(notSavedNote);
 		notSavedNote.setId("wrong_id");
-		when(noteService.save(notSavedNote)).thenReturn(note);
-		
 		String jsonNote = json(notSavedNote);
+		notSavedNote.setId(null);
+		
+		when(noteService.save(notSavedNote)).thenReturn(note);
 		
 		mockMvc.perform(post(RestUri.notes, boardId)
 				.contentType(contentType)

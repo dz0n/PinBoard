@@ -1,6 +1,7 @@
 package dzon.pinboard.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
@@ -61,7 +62,26 @@ public class BoardServiceImplTest {
 		verify(boardPermissionService, times(1)).getBoardPermissionsByUser(userId);
 		verify(repository, times(3)).findOne(any(String.class));
 	}
-
+	
+	@Test
+	public void testGetBoardsWithNullBoardPermission() {
+		Collection<Board> boards = getBoardsCollection();
+		Collection<BoardPermission> permissions = getBoardPermissions(boards);
+		
+		when(boardPermissionService.getBoardPermissionsByUser(userId)).thenReturn(permissions);
+		for(Board board : boards) {
+			when(repository.findOne(board.getId())).thenReturn(null);
+		}
+		
+		Collection<Board> resultBoards = service.getBoards(userId);
+		for(Board board : resultBoards) {
+			assertNotNull(board);
+		}
+		
+		verify(boardPermissionService, times(1)).getBoardPermissionsByUser(userId);
+		verify(repository, times(3)).findOne(any(String.class));
+	}
+	
 	@Test
 	public void testGet() {
 		Board board = getBoard();

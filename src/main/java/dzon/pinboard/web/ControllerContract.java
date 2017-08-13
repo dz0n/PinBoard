@@ -15,8 +15,8 @@ public class ControllerContract {
 		public static final String register = api + "/register";
 		public static final String users = api + "/users";
 		public static final String boards = api + "/boards";
-		public static final String notes = api + boards + "/{boardId}/notes";
-		public static final String permissions = api + "/permissions";
+		public static final String notes = boards + "/{boardId}/notes";
+		public static final String permissions = boards + "/{boardId}/permissions";
 		
 	}
 	
